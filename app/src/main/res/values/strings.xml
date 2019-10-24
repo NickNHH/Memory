@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Memory</string>
-    <string name="action_settings">Settings</string>
     <string name="recyclerView">recyclerView</string>
     <string name="imageView">ImageView</string>
     <string name="takePhoto">Take photo</string>
     <string name="gallery">Gallery</string>
-    <string name="solution">Enter solution</string>
+    <string name="add">Add solution</string>
     <string name="solutionText1">Solution 1</string>
     <string name="solutionText2">Solution 2</string>
+    <string name="logbook">Logbook</string>
 </resources>
