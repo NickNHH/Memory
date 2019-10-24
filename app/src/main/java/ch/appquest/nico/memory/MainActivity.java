@@ -1,6 +1,8 @@
 package ch.appquest.nico.memory;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,8 @@ import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 public class MainActivity extends AppCompatActivity {
+    Bitmap bitmap;
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 takeQrCodePicture();
+
             }
         });
     }
@@ -41,17 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
             Bundle extras = data.getExtras();
             assert extras != null;
-            String path = extras.getString(
-                    Intents.Scan.RESULT_BARCODE_IMAGE_PATH);
+            String path = extras.getString(Intents.Scan.RESULT_BARCODE_IMAGE_PATH);
 
-            // Ein Bitmap zur Darstellung erhalten wir so:
-            // Bitmap bmp = BitmapFactory.decodeFile(path)
-
-            String code = extras.getString(
-                    Intents.Scan.RESULT);
-
-            System.out.println("Path: " + path);
-            System.out.println("Code: " + code);
+            code = extras.getString(Intents.Scan.RESULT);
+            bitmap = BitmapFactory.decodeFile(path);
         }
     }
 

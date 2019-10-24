@@ -1,25 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:orientation="vertical"
+    tools:context="MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/recyclerView" />
+        android:layout_height="79dp"
+        android:orientation="horizontal">
+
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/takePictureButton"
+            android:layout_width="205dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="0dp"
+            android:background="#ff6633"
+            android:text="@string/takePhoto"
+            android:textColor="#ffffff" />
+
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/choosePictureButton"
+            android:layout_width="206dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="0dp"
+            android:background="#ff6633"
+            android:text="@string/gallery"
+            android:textColor="#ffffff" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/solution1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        android:hint="@string/solutionText1"/>
+
+    <EditText
+        android:id="@+id/solution2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        android:hint="@string/solutionText2" />
 
     <Button
-        android:id="@+id/takePictureButton"
+        android:id="@+id/solutionButton"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="69dp"
         android:background="#00c853"
-        android:text="@string/takePicture"
+        android:text="@string/solution"
         android:textColor="#ffffff" />
-</RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
