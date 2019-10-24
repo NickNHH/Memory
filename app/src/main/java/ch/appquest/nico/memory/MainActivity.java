@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
     String code;
     List<String[]> solutionList = new ArrayList<>();
+    static List<String> imagePaths = new ArrayList<>();
+    static List<String> textStrings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         RecyclerView rv = findViewById(R.id.recyclerView);
+        ContactsAdapter adapter = new ContactsAdapter();
+        rv.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         rv.setLayoutManager(gridLayoutManager);
     }
@@ -99,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
             code = extras.getString(Intents.Scan.RESULT);
             bitmap = BitmapFactory.decodeFile(path);
+
+            imagePaths.add(path);
+            textStrings.add(code);
         }
     }
 

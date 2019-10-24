@@ -8,4 +8,5 @@
     <string name="solutionText1">Solution 1</string>
     <string name="solutionText2">Solution 2</string>
     <string name="logbook">Logbook</string>
+    <string name="imageViewDesc">Small picture of solution</string>
 </resources>
