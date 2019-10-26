@@ -11,12 +11,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class LogBook {
+class LogBook {
 
     private Intent logbookIntent = new Intent("ch.appquest.intent.LOG");
 
     // Checks if logbook app is installed on the phone
-    public boolean checkIfLogbookInstalled(Context context) {
+    boolean checkIfLogbookInstalled(Context context) {
         if (context.getPackageManager().queryIntentActivities(logbookIntent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty()) {
             Toast.makeText(context, "Logbook App not Installed", Toast.LENGTH_LONG).show();
             return false;
@@ -26,7 +26,7 @@ public class LogBook {
     }
 
     // Passes JSON object with solution info to logbook app
-    public void passDataToLogbook(Context context, List<String[]> solution) {
+    void passDataToLogbook(Context context, List<String[]> solution) {
         JSONObject solutionJSON = new JSONObject();
         JSONArray solutionJSONArray = new JSONArray(solution);
         try {

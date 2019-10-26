@@ -8,26 +8,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyViewHolder> {
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemTextView;
-        public ImageView itemImageView;
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView itemTextView;
+        ImageView itemImageView;
 
-        public MyViewHolder(View v) {
+        MyViewHolder(View v) {
             super(v);
-            itemTextView = (TextView) v.findViewById(R.id.textViewItem);
-            itemImageView = (ImageView) v.findViewById(R.id.imageViewItem);
+            itemTextView = v.findViewById(R.id.textViewItem);
+            itemImageView = v.findViewById(R.id.imageViewItem);
         }
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
     public ContactsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = (View) LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.memory_layout, parent, false);
 
         return new MyViewHolder(v);
@@ -38,16 +40,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - replace the contents of the view with new elements
         holder.itemTextView.setText(MainActivity.textStrings.get(position));
-        holder.itemImageView.setImageBitmap(bitmapAusgeben(MainActivity.imagePaths.get(position)));
+        holder.itemImageView.setImageBitmap(outputBitmap(MainActivity.imagePaths.get(position)));
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of your dataSet (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return MainActivity.textStrings.size();
     }
 
-    private Bitmap bitmapAusgeben(String path){
+    private Bitmap outputBitmap(String path){
         return BitmapFactory.decodeFile(path);
     }
 }
