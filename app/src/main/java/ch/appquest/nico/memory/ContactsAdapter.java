@@ -32,7 +32,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     public ContactsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rvItem_main, parent, false);
+                .inflate(R.layout.rv_item_main, parent, false);
 
         return new MyViewHolder(v);
     }
@@ -45,7 +45,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         holder.itemImageView.setImageBitmap(outputBitmap(MainActivity.imagePaths.get(position)));
     }
 
-    // Return the size of your dataSet (invoked by the layout manager)
+    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return MainActivity.textStrings.size();

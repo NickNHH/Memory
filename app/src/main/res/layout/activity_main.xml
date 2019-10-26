@@ -8,20 +8,6 @@
     android:orientation="vertical"
     tools:context="MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="79dp"
@@ -65,12 +51,26 @@
         android:importantForAutofill="no"
         android:hint="@string/solutionText2" />
 
+    <ImageView
+        android:id="@+id/showPic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/imageView"/>
+
     <Button
         android:id="@+id/solutionButton"
         android:layout_width="fill_parent"
-        android:layout_height="69dp"
+        android:layout_height="wrap_content"
         android:background="#00c853"
         android:text="@string/add"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00c853"
+        android:text="@string/logBookEntry"
+        android:id="@+id/addLogbook"
         android:textColor="#ffffff" />
 
     <androidx.recyclerview.widget.RecyclerView

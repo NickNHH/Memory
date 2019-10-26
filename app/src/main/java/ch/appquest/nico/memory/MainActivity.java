@@ -5,15 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.zxing.client.android.Intents;
@@ -24,8 +22,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
-    String code;
     List<String[]> solutionList = new ArrayList<>();
+    Context context = this;
+    private LogBook logging = new LogBook();
     static List<String> imagePaths = new ArrayList<>();
     static List<String> textStrings = new ArrayList<>();
 
@@ -33,27 +32,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        RecyclerView rv = findViewById(R.id.recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rv.setLayoutManager(mLayoutManager);
+
+        RecyclerView.Adapter mAdapter = new ContactsAdapter();
+        rv.setAdapter(mAdapter);
+
+        final Button takePicBtn = findViewById(R.id.takePictureButton);
+        final ImageView imageView = findViewById(R.id.showPic);
 
         // get picture button
-        Button takePicBtn = findViewById(R.id.takePictureButton);
         takePicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takeQrCodePicture();
-
+                imageView.setImageBitmap(bitmap);
             }
         });
 
-        EditText solutionWord1 = findViewById(R.id.solution1);
-        EditText solutionWord2 = findViewById(R.id.solution2);
+        final EditText solutionWord1 = findViewById(R.id.solution1);
+        final EditText solutionWord2 = findViewById(R.id.solution2);
+        final Button addSolutionBtn = findViewById(R.id.solutionButton);
 
-        Button solutionBtn = findViewById(R.id.solutionButton);
-        solutionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
+        addSolutionBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                saveSolution(solutionWord1.getText().toString(), solutionWord2.getText().toString());
+                solutionWord1.setText("");
+                solutionWord2.setText("");
+            }
+        });
 
+        final Button logBookBtn = findViewById(R.id.addLogbook);
+
+        logBookBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                boolean logbookInstalled = logging.checkIfLogbookInstalled(context);
+                if (logbookInstalled) {
+                    logging.passDataToLogbook(context, solutionList);
+                }
             }
         });
 
@@ -62,50 +80,30 @@ public class MainActivity extends AppCompatActivity {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO: Implement method
             }
         });
-
-        RecyclerView rv = findViewById(R.id.recyclerView);
-        ContactsAdapter adapter = new ContactsAdapter();
-        rv.setAdapter(adapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        rv.setLayoutManager(gridLayoutManager);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        LogBook logBook = new LogBook();
-        Context context = this;
-
-        if (item.getItemId() == R.id.logbook) {
-            logBook.passDataToLogbook(context, solutionList);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IntentIntegrator.REQUEST_CODE
-                && resultCode == RESULT_OK) {
+        if (requestCode == IntentIntegrator.REQUEST_CODE && resultCode == RESULT_OK) {
 
             Bundle extras = data.getExtras();
             assert extras != null;
             String path = extras.getString(Intents.Scan.RESULT_BARCODE_IMAGE_PATH);
 
-            code = extras.getString(Intents.Scan.RESULT);
-            bitmap = BitmapFactory.decodeFile(path);
+            String code = extras.getString(Intents.Scan.RESULT);
+
+            bitmap  = outputBitmap(path);
+            String solution = outputCode(code);
 
             imagePaths.add(path);
-            textStrings.add(code);
+            textStrings.add(solution);
+
+            finish();
+            startActivity(getIntent());
         }
     }
 
@@ -116,5 +114,18 @@ public class MainActivity extends AppCompatActivity {
         integrator.setOrientationLocked(false);
         integrator.addExtra(Intents.Scan.BARCODE_IMAGE_ENABLED, true);
         integrator.initiateScan();
+    }
+
+    private Bitmap outputBitmap(String path){
+        return BitmapFactory.decodeFile(path);
+    }
+
+    private String outputCode(String code){ return code; }
+
+    private void saveSolution(String solution1, String solution2){
+        String[] wordSet = new String[2];
+        wordSet[0] = solution1;
+        wordSet[1] = solution2;
+        solutionList.add(wordSet);
     }
 }

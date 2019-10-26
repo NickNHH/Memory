@@ -9,4 +9,5 @@
     <string name="solutionText2">Solution 2</string>
     <string name="logbook">Logbook</string>
     <string name="imageViewDesc">Small picture of solution</string>
+    <string name="logBookEntry">Add 2 Logbook</string>
 </resources>
