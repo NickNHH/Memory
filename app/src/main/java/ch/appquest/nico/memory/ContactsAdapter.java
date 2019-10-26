@@ -8,31 +8,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-// Create the basic adapter extending from RecyclerView.Adapter
-// Note that we specify the custom ViewHolder which gives us access to our views
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyViewHolder> {
 
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView itemTextView;
-        ImageView itemImageView;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView itemTextView;
+        public ImageView itemImageView;
 
-        MyViewHolder(View v) {
+        public MyViewHolder(View v) {
             super(v);
-            itemTextView = v.findViewById(R.id.itemTextView);
-            itemImageView = v.findViewById(R.id.itemImageView);
+            itemTextView = (TextView) v.findViewById(R.id.textViewItem);
+            itemImageView = (ImageView) v.findViewById(R.id.imageViewItem);
         }
     }
 
     // Create new views (invoked by the layout manager)
-    @NonNull
     @Override
     public ContactsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_item_main, parent, false);
+        View v = (View) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.memory_layout, parent, false);
 
         return new MyViewHolder(v);
     }
@@ -42,7 +38,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - replace the contents of the view with new elements
         holder.itemTextView.setText(MainActivity.textStrings.get(position));
-        holder.itemImageView.setImageBitmap(outputBitmap(MainActivity.imagePaths.get(position)));
+        holder.itemImageView.setImageBitmap(bitmapAusgeben(MainActivity.imagePaths.get(position)));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -51,7 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
         return MainActivity.textStrings.size();
     }
 
-    private Bitmap outputBitmap(String path){
+    private Bitmap bitmapAusgeben(String path){
         return BitmapFactory.decodeFile(path);
     }
 }

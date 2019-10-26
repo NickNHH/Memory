@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    Bitmap bitmap;
-    List<String[]> solutionList = new ArrayList<>();
+    private Bitmap bild;
+    private List<String[]> loesungsListe = new ArrayList<>();
     Context context = this;
     private LogBook logging = new LogBook();
     static List<String> imagePaths = new ArrayList<>();
@@ -32,62 +32,60 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView rv = findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        rv.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         RecyclerView.Adapter mAdapter = new ContactsAdapter();
-        rv.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-        final Button takePicBtn = findViewById(R.id.takePictureButton);
-        final ImageView imageView = findViewById(R.id.showPic);
+        final Button fotoAufnehmenButton = findViewById(R.id.takePictureButton);
+        final ImageView bildAnzeigen = findViewById(R.id.showPic);
 
-        // get picture button
-        takePicBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takeQrCodePicture();
-                imageView.setImageBitmap(bitmap);
-            }
-        });
-
-        final EditText solutionWord1 = findViewById(R.id.solution1);
-        final EditText solutionWord2 = findViewById(R.id.solution2);
-        final Button addSolutionBtn = findViewById(R.id.solutionButton);
-
-        addSolutionBtn.setOnClickListener(new View.OnClickListener() {
+        fotoAufnehmenButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveSolution(solutionWord1.getText().toString(), solutionWord2.getText().toString());
-                solutionWord1.setText("");
-                solutionWord2.setText("");
+                qrCodeBildMachen();
+                bildAnzeigen.setImageBitmap(bild);
             }
         });
 
-        final Button logBookBtn = findViewById(R.id.addLogbook);
+        final EditText loesungsText = findViewById(R.id.solution1);
+        final EditText loesungsText2 = findViewById(R.id.solution2);
 
-        logBookBtn.setOnClickListener(new View.OnClickListener() {
+        final Button loesungArrayErstellen = findViewById(R.id.solutionButton);
+                loesungArrayErstellen.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                loesungSpeichern(loesungsText.getText().toString(), loesungsText2.getText().toString());
+                loesungsText.setText("");
+                loesungsText2.setText("");
+            }
+        });
+
+        final Button logBuchButton = findViewById(R.id.addLogbook);
+
+        logBuchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 boolean logbookInstalled = logging.checkIfLogbookInstalled(context);
                 if (logbookInstalled) {
-                    logging.passDataToLogbook(context, solutionList);
+                    logging.passDataToLogbook(context, loesungsListe);
                 }
-            }
-        });
-
-        // get gallery button
-        Button galleryBtn = findViewById(R.id.choosePictureButton);
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: Implement method
             }
         });
     }
 
+    public void qrCodeBildMachen() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(MyCaptureActivity.class);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setOrientationLocked(false);
+        integrator.addExtra(Intents.Scan.BARCODE_IMAGE_ENABLED, true);
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IntentIntegrator.REQUEST_CODE && resultCode == RESULT_OK) {
 
             Bundle extras = data.getExtras();
@@ -96,36 +94,27 @@ public class MainActivity extends AppCompatActivity {
 
             String code = extras.getString(Intents.Scan.RESULT);
 
-            bitmap  = outputBitmap(path);
-            String solution = outputCode(code);
+            bild  = bitmapAusgeben(path);
+            String loesungsWort = codeAusgeben(code);
 
             imagePaths.add(path);
-            textStrings.add(solution);
+            textStrings.add(loesungsWort);
 
             finish();
             startActivity(getIntent());
         }
     }
 
-    public void takeQrCodePicture() {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setCaptureActivity(MyCaptureActivity.class);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setOrientationLocked(false);
-        integrator.addExtra(Intents.Scan.BARCODE_IMAGE_ENABLED, true);
-        integrator.initiateScan();
-    }
-
-    private Bitmap outputBitmap(String path){
+    private Bitmap bitmapAusgeben(String path){
         return BitmapFactory.decodeFile(path);
     }
 
-    private String outputCode(String code){ return code; }
+    private String codeAusgeben(String code){ return code; }
 
-    private void saveSolution(String solution1, String solution2){
-        String[] wordSet = new String[2];
-        wordSet[0] = solution1;
-        wordSet[1] = solution2;
-        solutionList.add(wordSet);
+    private void loesungSpeichern(String loesung, String loesung2){
+        String[] wortPaar = new String[2];
+       wortPaar[0] = loesung;
+       wortPaar[1] = loesung2;
+       loesungsListe.add(wortPaar);
     }
 }

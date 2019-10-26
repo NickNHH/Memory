@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class LogBook {
+
     private Intent logbookIntent = new Intent("ch.appquest.intent.LOG");
 
     // Checks if logbook app is installed on the phone
