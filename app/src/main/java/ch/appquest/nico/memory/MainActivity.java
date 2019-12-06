@@ -1,6 +1,7 @@
 package ch.appquest.nico.memory;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText solutionWord2 = findViewById(R.id.solution2);
 
         final Button addToArrayBtn = findViewById(R.id.solutionButton);
-                addToArrayBtn.setOnClickListener(new View.OnClickListener() {
+        addToArrayBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 saveSolution(solutionWord1.getText().toString(), solutionWord2.getText().toString());
                 solutionWord1.setText("");
@@ -95,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
             String code = extras.getString(Intents.Scan.RESULT);
 
             bitmap = BitmapFactory.decodeFile(path);
+            String savedIMGPath = saveToInternalStorage(bitmap);
+            loadImageFromStorage(savedIMGPath);
 
             imagePaths.add(path);
             textStrings.add(code);
@@ -104,10 +112,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void saveSolution(String solution1, String solution2){
+    private void saveSolution(String solution1, String solution2) {
         String[] wortPaar = new String[2];
-       wortPaar[0] = solution1;
-       wortPaar[1] = solution2;
-       solutions.add(wortPaar);
+        wortPaar[0] = solution1;
+        wortPaar[1] = solution2;
+        solutions.add(wortPaar);
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File myPath = new File(directory, "profile.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(myPath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
+    }
+
+    private void loadImageFromStorage(String path) {
+        try {
+            File f = new File(path, "profile.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            ImageView img = findViewById(R.id.showPic);
+            img.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }
